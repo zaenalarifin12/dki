@@ -5,9 +5,12 @@
 
     <div class="row my-2 ">
         <div class="col-10">
-        <a class="btn btn-primary" href="{{ url("/nasabah")}}">
-            Tambah Nasabah
-        </a>
+            @if (Auth::user()->role == "user")
+            <a class="btn btn-primary" href="{{ url("/nasabah")}}">
+                Tambah Nasabah
+            </a>
+                    
+            @endif
         </div>
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -34,6 +37,7 @@
                 <th>Pekerjaan</th>
                 <th>Desa</th>
                 <th>Alamat</th>
+                <th>Nominal setor</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -67,7 +71,10 @@
                 { data: 'jenis_kelamin', name: 'jenis_kelamin' , searchable: false},
                 { data: 'pekerjaan', name: 'pekerjaan' , searchable: false},
                 { data: 'desa_name', name: 'desa_name' , searchable: false},
+                { data: 'alamat_provinsi', name: 'alamat_provinsi', searchable: false },
+
                 { data: 'nominal_setor', name: 'nominal_setor', searchable: false },
+
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             order: [[0, 'asc']] // Default sort column and order

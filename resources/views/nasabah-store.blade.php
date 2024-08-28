@@ -91,6 +91,7 @@
         <div class="form-group">
             <label for="kecamatan">Kecamatan</label>
             <select class="form-control @error('kecamatan') is-invalid @enderror" id="kecamatan" name="kecamatan" required>
+              
                 <!-- Options will be populated via AJAX based on selected kabupaten -->
             </select>
             @error('kecamatan')

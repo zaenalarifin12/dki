@@ -27,11 +27,11 @@ class NasabahController extends Controller
 
             if ($nasabah->approve == 1) {
                 return '<button class="btn btn-secondary btn-sm" disabled>Already Approved</button>
-                <a href="{{ url("/nasabah/'. $nasabah->id .'") }}">Detail</a>';
+                <a href="' . $url .'">Detail</a>';
             } else {
                 if (auth()->user()->role == "admin"){
                     return '<button class="btn btn-primary btn-sm approve-button" data-id="' . $nasabah->id . '">Approve</button>
-                    ';
+                    <a href="'. $url .'">Detail</a>';
                 }else{
                     return '<a href="'.$url.'">Detail</a>';
                 }
@@ -45,14 +45,14 @@ class NasabahController extends Controller
                 $formattedAmount = number_format($nasabah->nominal_setor, 0, ',', '.');
                 return "Rp. ". $formattedAmount ?? 'N/A'; // Assuming 'name' is a field in the 'desas' table
             })
-
-            
-
             ->addColumn('desa_name', function ($nasabah) {
                 return $nasabah->desa ? $nasabah->desa->name : 'N/A'; // Assuming 'name' is a field in the 'desas' table
             })
             ->addColumn('jenis_kelamin', function ($nasabah) {
                 return $nasabah->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'; // Adjust the mapping as needed
+            })
+            ->addColumn('alamat_provinsi', function ($nasabah) {
+                return $nasabah->desa->kecamatan->kabupaten->provinsi->name; // Adjust the mapping as needed
             })
             ->filterColumn('nama', function($query, $keyword) {
                 $query->where('nama', 'like', "%{$keyword}%");
@@ -78,8 +78,7 @@ class NasabahController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => [
                 'required',
-                'regex:/^[A-Za-z\s]+$/', // Hanya huruf dan spasi
-                'not_in:Profesor,Haji', // Tidak boleh ada kata tertentu
+                'regex:/^(?!.*\b(?:Haji|Profesor)\b)(?:[A-Za-z\s]+)$/i', // Hanya huruf dan spasi
             ],
             'tempat_lahir' => 'required|max:255',
             'tanggal_lahir' => 'required|date',
@@ -90,8 +89,7 @@ class NasabahController extends Controller
             'nominal_setor' => 'required|',
         ], [
             'nama.required' => 'Nama tidak boleh kosong.',
-            'nama.regex' => 'Nama hanya boleh berisi huruf dan spasi.',
-            'nama.not_in' => 'Nama tidak boleh mengandung kata "Profesor" atau "Haji".',
+            'nama.regex' => 'Nama tidak boleh diawali dengan "Haji" atau "Profesor", dan hanya boleh berisi huruf dan spasi.',
             'tempat_lahir.required' => 'Tempat lahir harus diisi.',
             'tempat_lahir.max' => 'Tempat lahir tidak boleh lebih dari 255 karakter.',
             'tanggal_lahir.required' => 'Tanggal lahir harus diisi.',
@@ -147,7 +145,7 @@ class NasabahController extends Controller
 
     public function detail($id) {
 
-        $data = Nasabah::with(["desa"])->find($id);
+        $data = Nasabah::with(["desa", "desa.kecamatan", "desa.kecamatan.kabupaten", "desa.kecamatan.kabupaten.provinsi"])->find($id);
 
 
         return view("nasabah-view", compact("data"));

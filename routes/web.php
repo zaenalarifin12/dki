@@ -24,11 +24,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/nasabah/{id}', [NasabahController::class, "detail"]);
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
 });
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
-    Route::post('/nasabah/approve', [NasabahController::class, "approve"]);
+    Route::post('/nasabah/approve/{id}', [NasabahController::class, "approve"]);
 });
 
 Route::get('/data-nasabah', [NasabahController::class, "getNasabahData"]);

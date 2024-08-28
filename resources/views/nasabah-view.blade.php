@@ -32,22 +32,22 @@
 
     <div class="form-group">
         <label for="provinsi">Provinsi</label>:
-        <span>{{ $data->provinsi->name ?? 'Tidak Diketahui' }}</span>
+        <span>{{ $data->desa->kecamatan->kabupaten->provinsi->name ?? 'Tidak Diketahui' }}</span>
     </div>
 
     <div class="form-group">
         <label for="kabupaten">Kabupaten</label>:
-        <span>{{ $data->provinsi->kabupaten->name ?? 'Tidak Diketahui' }}</span>
+        <span>{{ $data->desa->kecamatan->kabupaten->name ?? 'Tidak Diketahui' }}</span>
     </div>
 
     <div class="form-group">
         <label for="kecamatan">Kecamatan</label> :
-        <span>{{ $data->provinsi->kabupaten->kecamatan->name ?? 'Tidak Diketahui' }}</span>
+        <span>{{ $data->desa->kecamatan->name ?? 'Tidak Diketahui' }}</span>
     </div>
 
     <div class="form-group">
         <label for="desa">Desa</label>:
-        <span>{{ $data->provinsi->kabupaten->kecamatan->desa->name ?? 'Tidak Diketahui' }}</span>
+        <span>{{ $data->desa->name ?? 'Tidak Diketahui' }}</span>
     </div>
 
     <div class="form-group">
